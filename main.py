@@ -7,7 +7,17 @@ def game_screen():
     win = pygame.display.set_mode((500,500))
     pygame.display.set_caption("Пятнашки")
 
-
+#Ход
+def make_move(zone,direction):
+    i,j = find_zero(zone)
+    if direction == 'up' and i > 0:
+        zone[i][j],zone[i-1][j] = zone[i-1][j],zone[i][j]
+    if direction == 'down' and i < 3:
+        zone[i][l],zone[i+1][j] = zone[i+1][j],zone[i][j]
+    if direction == 'left' and j > 0:
+        zone[i][j],zone[i][j-1] = zone[i][j-1],zone[i][j]
+    if direction == 'right' and j < 3:
+        zone[i][j],zone[i][j+1] = zone[i][j+1],zone[i][j]
 
 #Созданаие игрового поля
 def create_zone():
@@ -43,6 +53,21 @@ def win(zone,otvet):
 def main():
     game_screen()
     zone,otvet = create_zone()
-    i,j = find_zero(zone)
+    run = True
+    while run:
+        pygame.time.delay(50)
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                run = False
+        
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_LEFT]:
+            make_move(zone,'left')
+        if keys[pygame.K_UP]:
+            make_move(zone,'up')
+        if keys[pygame.K_DOWN]:
+            make_move(zone,'down')
+        if keys[pygame.K_RIGHT]:
+            make_move(zone,'right')
 
 main()
