@@ -113,8 +113,20 @@ def main():
                 elapsed_time = int(time.time() - start_time)
                 print(f"Вы победили за {moves} ходов за {elapsed_time} секунд!")
 
+                screen.fill(BACKGROUND_COLOR)
+                win_text = font.render(f"Вы победили за {moves} ходов!", True, (0, 0, 0))
+                time_text = font.render(f"Время: {elapsed_time} с", True, (0, 0, 0))
+                replay_text = font.render("Нажмите R, чтобы сыграть ещё раз", True, (0, 0, 0))
+                screen.blit(win_text, (WINDOW_SIZE // 2 - win_text.get_width() // 2, 150))
+                pygame.display.update()
 
-        pygame.quit()
-
+                while True:
+                    for event in pygame.event.get():
+                        if event.type == pygame.QUIT:
+                            pygame.quit()
+                            return
+                        elif event.type == pygame.KEYDOWN:
+                            if event.key == pygame.K_r:
+                                main()
 main()
 
