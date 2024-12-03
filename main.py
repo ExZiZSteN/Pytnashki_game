@@ -71,6 +71,9 @@ def draw_zone(screen, zone, font, moves, start_time):
                 text_rect = text.get_rect(center=(x + TILE_SIZE // 2, y + TILE_SIZE // 2))
                 screen.blit(text, text_rect)
             pygame.draw.rect(screen, (0, 0, 0), (x, y, TILE_SIZE, TILE_SIZE), 2)
+
+    highlight_moves(screen, zone)
+
     moves_text = font.render(f"Ходы: {moves}", True, (0, 0, 0))
     screen.blit(moves_text, (10, 10))
 
