@@ -5,7 +5,7 @@ import pygame
 WINDOW_SIZE = 500
 TILE_SIZE = WINDOW_SIZE // 4
 BACKGROUND_COLOR = (255, 255, 255)
-TILE_COLOR = (0, 150, 136)
+TILE_COLOR = [(49, 134, 154), (196, 224, 235), (221, 190, 146), (213, 113, 1)]
 TEXT_COLOR = (255, 255, 255)
 FONT_SIZE = 40
 
@@ -65,11 +65,11 @@ def draw_zone(screen, zone):
             x = j * TILE_SIZE
             y = i * TILE_SIZE
             if zone[i][j] != 0:  # Не отрисовываем пустую клетку
-                pygame.draw.rect(screen, TILE_COLOR, (x, y, TILE_SIZE, TILE_SIZE))
+                pygame.draw.rect(screen, TILE_COLOR[zone[i][j] % 4], (x, y, TILE_SIZE, TILE_SIZE))
                 text = font.render(str(zone[i][j]), True, TEXT_COLOR)
                 text_rect = text.get_rect(center=(x + TILE_SIZE // 2, y + TILE_SIZE // 2))
                 screen.blit(text, text_rect)
-
+            pygame.draw.rect(screen, (0, 0, 0), (x, y, TILE_SIZE, TILE_SIZE), 2)
     pygame.display.update()
 
 #Сборка всего
@@ -82,16 +82,16 @@ def main():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
-        
-        keys = pygame.key.get_pressed()
-        if keys[pygame.K_LEFT]:
-            make_move(zone,'left')
-        if keys[pygame.K_UP]:
-            make_move(zone,'up')
-        if keys[pygame.K_DOWN]:
-            make_move(zone,'down')
-        if keys[pygame.K_RIGHT]:
-            make_move(zone,'right')
+
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_LEFT:
+                    make_move(zone,'left')
+                elif event.key == pygame.K_UP:
+                    make_move(zone,'up')
+                elif event.key == pygame.K_DOWN:
+                    make_move(zone,'down')
+                elif event.key == pygame.K_RIGHT:
+                    make_move(zone,'right')
 
         draw_zone(screen, zone)
 
