@@ -1,5 +1,6 @@
 from random import randint
 import pygame
+import time
 
 # Настройки игры
 WINDOW_SIZE = 500
@@ -56,7 +57,7 @@ def win(zone,otvet):
     return zone == otvet
 
 # Отрисовка игрового поля
-def draw_zone(screen, zone):
+def draw_zone(screen, zone, font, moves, start_time):
     screen.fill(BACKGROUND_COLOR)
     font = pygame.font.Font(None, FONT_SIZE)
 
@@ -70,35 +71,50 @@ def draw_zone(screen, zone):
                 text_rect = text.get_rect(center=(x + TILE_SIZE // 2, y + TILE_SIZE // 2))
                 screen.blit(text, text_rect)
             pygame.draw.rect(screen, (0, 0, 0), (x, y, TILE_SIZE, TILE_SIZE), 2)
+    moves_text = font.render(f"Ходы: {moves}", True, (0, 0, 0))
+    screen.blit(moves_text, (10, 10))
+
+    # Отображение времени
+    elapsed_time = int(time.time() - start_time)
+    time_text = font.render(f"Время: {elapsed_time} с", True, (0, 0, 0))
+    screen.blit(time_text, (10, 50))
+
     pygame.display.update()
 
 #Сборка всего
 def main():
-    screen = game_screen()
-    zone,otvet = create_zone()
-    run = True
-    while run:
-        pygame.time.delay(100)
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                run = False
+    while True:
+        screen = game_screen()
+        font = pygame.font.Font(None, FONT_SIZE)
+        zone,otvet = create_zone()
+        moves=0
+        start_time=time.time()
+        run = True
+        while run:
+            pygame.time.delay(100)
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    return
 
-            elif event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_LEFT:
-                    make_move(zone,'left')
-                elif event.key == pygame.K_UP:
-                    make_move(zone,'up')
-                elif event.key == pygame.K_DOWN:
-                    make_move(zone,'down')
-                elif event.key == pygame.K_RIGHT:
-                    make_move(zone,'right')
+                elif event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_LEFT:
+                        make_move(zone,'left')
+                    elif event.key == pygame.K_UP:
+                        make_move(zone,'up')
+                    elif event.key == pygame.K_DOWN:
+                        make_move(zone,'down')
+                    elif event.key == pygame.K_RIGHT:
+                        make_move(zone,'right')
 
-        draw_zone(screen, zone)
+            draw_zone(screen, zone, font, moves, start_time)
 
-        if win(zone, otvet):
-            print("Вы победили!")
-            run = False
+            if win(zone, otvet):
+                elapsed_time = int(time.time() - start_time)
+                print(f"Вы победили за {moves} ходов за {elapsed_time} секунд!")
 
-    pygame.quit()
+
+        pygame.quit()
 
 main()
+
