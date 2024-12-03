@@ -83,15 +83,15 @@ def main():
             if event.type == pygame.QUIT:
                 run = False
         
-        keys = pygame.key.get_pressed()
-        if keys[pygame.K_LEFT]:
-            make_move(zone,'left')
-        if keys[pygame.K_UP]:
-            make_move(zone,'up')
-        if keys[pygame.K_DOWN]:
-            make_move(zone,'down')
-        if keys[pygame.K_RIGHT]:
-            make_move(zone,'right')
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_LEFT:
+                    make_move(zone,'left')
+                elif event.key ==  pygame.K_UP:
+                    make_move(zone,'up')
+                elif event.key == pygame.K_DOWN:
+                    make_move(zone,'down')
+                elif event.key ==  pygame.K_RIGHT:
+                    make_move(zone,'right')
 
         draw_zone(screen, zone)
 
