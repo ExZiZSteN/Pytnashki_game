@@ -100,12 +100,16 @@ def main():
                 elif event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_LEFT:
                         make_move(zone,'left')
+                        moves+=1
                     elif event.key == pygame.K_UP:
                         make_move(zone,'up')
+                        moves+=1
                     elif event.key == pygame.K_DOWN:
                         make_move(zone,'down')
+                        moves+=1
                     elif event.key == pygame.K_RIGHT:
                         make_move(zone,'right')
+                        moves+=1
 
             draw_zone(screen, zone, font, moves, start_time)
 
