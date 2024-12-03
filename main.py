@@ -36,7 +36,7 @@ def create_zone():
         [9,10,11,12],
         [13,14,15,0]
         ]
-    zone = otvet.copy()
+    zone = [row[:] for row in otvet]
     for i in range(4):
         for j in range(4):
             x1,y1 = i,j
@@ -95,9 +95,9 @@ def main():
 
         draw_zone(screen, zone)
 
-        """if win(zone, otvet):
+        if win(zone, otvet):
             print("Вы победили!")
-            run = False"""
+            run = False
 
     pygame.quit()
 
