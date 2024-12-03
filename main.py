@@ -81,6 +81,19 @@ def draw_zone(screen, zone, font, moves, start_time):
 
     pygame.display.update()
 
+# Подсветка доступных ходов
+def highlight_moves(screen, zone):
+    i, j = find_zero(zone)
+    neighbors = []  # Список соседей (доступных ходов)
+    if i > 0:  # Верхняя клетка
+        neighbors.append((i-1, j))
+    if i < 3:
+        neighbors.append((i+1, j))
+    if j > 0:  
+        neighbors.append((i, j-1))
+    if j < 3:  
+        neighbors.append((i, j+1))
+
 #Сборка всего
 def main():
     while True:
