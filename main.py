@@ -93,6 +93,10 @@ def highlight_moves(screen, zone):
         neighbors.append((i, j-1))
     if j < 3:  
         neighbors.append((i, j+1))
+    for ni, nj in neighbors:
+        x = nj * TILE_SIZE
+        y = ni * TILE_SIZE
+        pygame.draw.rect(screen, (0, 255, 0), (x, y, TILE_SIZE, TILE_SIZE), 5)
 
 #Сборка всего
 def main():
