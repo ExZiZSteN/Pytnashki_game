@@ -145,6 +145,8 @@ def main():
             time_text = font.render(f"Время: {elapsed_time} с", True, (0, 0, 0))
             replay_text = font.render("Нажмите R, чтобы сыграть ещё раз", True, (0, 0, 0))
             screen.blit(win_text, (WINDOW_SIZE // 2 - win_text.get_width() // 2, 150))
+            screen.blit(time_text, (WINDOW_SIZE // 2 - time_text.get_width() // 2, 200))
+            screen.blit(replay_text, (WINDOW_SIZE // 2 - replay_text.get_width() // 2, 250))
             pygame.display.update()
 
             while True:
@@ -157,4 +159,3 @@ def main():
                             main()
                             return
 main()
-
