@@ -9,11 +9,12 @@ BACKGROUND_COLOR = (255, 255, 255)
 TILE_COLOR = [(49, 134, 154), (196, 224, 235), (221, 190, 146), (213, 113, 1)]
 TEXT_COLOR = (255, 255, 255)
 FONT_SIZE = 40
+INFO_SIZE = 100     # Высота по y для информации
 
 #Pygame делаю че-то
 def game_screen():
     pygame.init()
-    screen = pygame.display.set_mode((WINDOW_SIZE,WINDOW_SIZE))
+    screen = pygame.display.set_mode((WINDOW_SIZE,600))
     pygame.display.set_caption("Пятнашки")
     return screen
 
@@ -59,18 +60,21 @@ def win(zone,otvet):
 # Отрисовка игрового поля
 def draw_zone(screen, zone, font, moves, start_time):
     screen.fill(BACKGROUND_COLOR)
-    font = pygame.font.Font(None, FONT_SIZE)
 
     for i in range(4):
         for j in range(4):
+            tile = zone[i][j]
             x = j * TILE_SIZE
             y = i * TILE_SIZE
-            if zone[i][j] != 0:  # Не отрисовываем пустую клетку
-                pygame.draw.rect(screen, TILE_COLOR[zone[i][j] % 4], (x, y, TILE_SIZE, TILE_SIZE))
-                text = font.render(str(zone[i][j]), True, TEXT_COLOR)
-                text_rect = text.get_rect(center=(x + TILE_SIZE // 2, y + TILE_SIZE // 2))
+            if tile != 0:  # Не рисуем пустую клетку
+                pygame.draw.rect(screen, TILE_COLOR[tile % len(TILE_COLOR)],
+                                 (j * TILE_SIZE, i * TILE_SIZE + INFO_SIZE, TILE_SIZE, TILE_SIZE))
+                text = font.render(str(tile), True, TEXT_COLOR)
+                text_rect = text.get_rect(center=(x + TILE_SIZE // 2,
+                                                  y + TILE_SIZE // 2 + INFO_SIZE))
                 screen.blit(text, text_rect)
-            pygame.draw.rect(screen, (0, 0, 0), (x, y, TILE_SIZE, TILE_SIZE), 2)
+
+            pygame.draw.rect(screen, (0, 0, 0), (x, y + INFO_SIZE, TILE_SIZE, TILE_SIZE), 2)
 
     highlight_moves(screen, zone)
 
@@ -99,58 +103,58 @@ def highlight_moves(screen, zone):
     for ni, nj in neighbors:
         x = nj * TILE_SIZE
         y = ni * TILE_SIZE
-        pygame.draw.rect(screen, (0, 255, 0), (x, y, TILE_SIZE, TILE_SIZE), 5)
+        pygame.draw.rect(screen, (0, 255, 0), (x, y + INFO_SIZE, TILE_SIZE, TILE_SIZE), 5)
 
 #Сборка всего
 def main():
-    while True:
-        screen = game_screen()
-        font = pygame.font.Font(None, FONT_SIZE)
-        zone,otvet = create_zone()
-        moves=0
-        start_time=time.time()
-        run = True
-        while run:
-            pygame.time.delay(100)
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    pygame.quit()
-                    return
+    screen = game_screen()
+    font = pygame.font.Font(None, FONT_SIZE)
+    zone,otvet = create_zone()
+    moves=0
+    start_time=time.time()
+    run = True
+    while run:
+        pygame.time.delay(100)
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                return
 
-                elif event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_LEFT:
-                        make_move(zone,'left')
-                        moves+=1
-                    elif event.key == pygame.K_UP:
-                        make_move(zone,'up')
-                        moves+=1
-                    elif event.key == pygame.K_DOWN:
-                        make_move(zone,'down')
-                        moves+=1
-                    elif event.key == pygame.K_RIGHT:
-                        make_move(zone,'right')
-                        moves+=1
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_LEFT:
+                    make_move(zone,'left')
+                    moves+=1
+                elif event.key == pygame.K_UP:
+                    make_move(zone,'up')
+                    moves+=1
+                elif event.key == pygame.K_DOWN:
+                    make_move(zone,'down')
+                    moves+=1
+                elif event.key == pygame.K_RIGHT:
+                    make_move(zone,'right')
+                    moves+=1
 
-            draw_zone(screen, zone, font, moves, start_time)
+        draw_zone(screen, zone, font, moves, start_time)
 
-            if win(zone, otvet):
-                elapsed_time = int(time.time() - start_time)
-                print(f"Вы победили за {moves} ходов за {elapsed_time} секунд!")
+        if win(zone, otvet):
+            elapsed_time = int(time.time() - start_time)
+            print(f"Вы победили за {moves} ходов за {elapsed_time} секунд!")
 
-                screen.fill(BACKGROUND_COLOR)
-                win_text = font.render(f"Вы победили за {moves} ходов!", True, (0, 0, 0))
-                time_text = font.render(f"Время: {elapsed_time} с", True, (0, 0, 0))
-                replay_text = font.render("Нажмите R, чтобы сыграть ещё раз", True, (0, 0, 0))
-                screen.blit(win_text, (WINDOW_SIZE // 2 - win_text.get_width() // 2, 150))
-                pygame.display.update()
+            screen.fill(BACKGROUND_COLOR)
+            win_text = font.render(f"Вы победили за {moves} ходов!", True, (0, 0, 0))
+            time_text = font.render(f"Время: {elapsed_time} с", True, (0, 0, 0))
+            replay_text = font.render("Нажмите R, чтобы сыграть ещё раз", True, (0, 0, 0))
+            screen.blit(win_text, (WINDOW_SIZE // 2 - win_text.get_width() // 2, 150))
+            pygame.display.update()
 
-                while True:
-                    for event in pygame.event.get():
-                        if event.type == pygame.QUIT:
-                            pygame.quit()
+            while True:
+                for event in pygame.event.get():
+                    if event.type == pygame.QUIT:
+                        pygame.quit()
+                        return
+                    elif event.type == pygame.KEYDOWN:
+                        if event.key == pygame.K_r:
+                            main()
                             return
-                        elif event.type == pygame.KEYDOWN:
-                            if event.key == pygame.K_r:
-                                main()
 main()
 
