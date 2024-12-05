@@ -11,6 +11,8 @@ TEXT_COLOR = (255, 255, 255)
 FONT_SIZE = 40
 INFO_SIZE = 100     # Высота по y для информации
 
+record_time = 0
+
 #Pygame делаю че-то
 def game_screen():
     pygame.init()
@@ -76,7 +78,7 @@ def draw_zone(screen, zone, font, moves, start_time):
 
             pygame.draw.rect(screen, (0, 0, 0), (x, y + INFO_SIZE, TILE_SIZE, TILE_SIZE), 2)
 
-    highlight_moves(screen, zone)
+    # highlight_moves(screen, zone)
 
     moves_text = font.render(f"Ходы: {moves}", True, (0, 0, 0))
     screen.blit(moves_text, (10, 10))
@@ -85,25 +87,26 @@ def draw_zone(screen, zone, font, moves, start_time):
     elapsed_time = int(time.time() - start_time)
     time_text = font.render(f"Время: {elapsed_time} с", True, (0, 0, 0))
     screen.blit(time_text, (10, 50))
-
+    record_text = font.render(f'Рекордное время: {record_time} с',True, (0,0,0))
+    screen.blit(record_text, (WINDOW_SIZE - record_text.get_width() - 10,10))
     pygame.display.update()
 
-# Подсветка доступных ходов
-def highlight_moves(screen, zone):
-    i, j = find_zero(zone)
-    neighbors = []  # Список соседей (доступных ходов)
-    if i > 0:  # Верхняя клетка
-        neighbors.append((i-1, j))
-    if i < 3:
-        neighbors.append((i+1, j))
-    if j > 0:  
-        neighbors.append((i, j-1))
-    if j < 3:  
-        neighbors.append((i, j+1))
-    for ni, nj in neighbors:
-        x = nj * TILE_SIZE
-        y = ni * TILE_SIZE
-        pygame.draw.rect(screen, (0, 255, 0), (x, y + INFO_SIZE, TILE_SIZE, TILE_SIZE), 5)
+# # Подсветка доступных ходов
+# def highlight_moves(screen, zone):
+#     i, j = find_zero(zone)
+#     neighbors = []  # Список соседей (доступных ходов)
+#     if i > 0:  # Верхняя клетка
+#         neighbors.append((i-1, j))
+#     if i < 3:
+#         neighbors.append((i+1, j))
+#     if j > 0:  
+#         neighbors.append((i, j-1))
+#     if j < 3:  
+#         neighbors.append((i, j+1))
+#     for ni, nj in neighbors:
+#         x = nj * TILE_SIZE
+#         y = ni * TILE_SIZE
+#         pygame.draw.rect(screen, (0, 255, 0), (x, y + INFO_SIZE, TILE_SIZE, TILE_SIZE), 5)
 
 #Сборка всего
 def main():
@@ -137,9 +140,11 @@ def main():
         draw_zone(screen, zone, font, moves, start_time)
 
         if win(zone, otvet):
+            global record_time
             elapsed_time = int(time.time() - start_time)
             print(f"Вы победили за {moves} ходов за {elapsed_time} секунд!")
-
+            if elapsed_time < record_time or record_time == 0:
+                    record_time = elapsed_time
             screen.fill(BACKGROUND_COLOR)
             win_text = font.render(f"Вы победили за {moves} ходов!", True, (0, 0, 0))
             time_text = font.render(f"Время: {elapsed_time} с", True, (0, 0, 0))
