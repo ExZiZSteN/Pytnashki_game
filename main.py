@@ -32,6 +32,29 @@ def make_move(zone,direction):
     if direction == 'right' and j < 3:
         zone[i][j],zone[i][j+1] = zone[i][j+1],zone[i][j]
 
+
+def is_solvable(zone):
+    flat_zone = [tile for row in zone for tile in row]
+    inversions = 0
+    for i in range(len(flat_zone)):
+        for j in range(i + 1, len(flat_zone)):
+            if flat_zone[i] > flat_zone[j]:
+                inversions += 1
+    
+    grid_size = len(zone)
+    for row_index, row in enumerate(zone):
+        if 0 in row:
+            zero_row_from_bottom = grid_size - row_index
+            break
+    
+    if grid_size % 2 != 0:  
+        return inversions % 2 == 0
+    else: 
+        if zero_row_from_bottom % 2 == 0:
+            return inversions % 2 != 0
+        else:
+            return inversions % 2 == 0
+
 #Создание игрового поля
 def create_zone():
     otvet = [
@@ -110,9 +133,15 @@ def draw_zone(screen, zone, font, moves, start_time):
 
 #Сборка всего
 def main():
+    zone,otvet = create_zone()
+    if is_solvable(zone):
+        print('da')
+    else:
+        print('no')
+        main()
+        return
     screen = game_screen()
     font = pygame.font.Font(None, FONT_SIZE)
-    zone,otvet = create_zone()
     moves=0
     start_time=time.time()
     run = True
